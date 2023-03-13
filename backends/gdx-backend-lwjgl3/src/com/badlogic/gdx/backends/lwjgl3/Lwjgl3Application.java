@@ -520,6 +520,11 @@ public class Lwjgl3Application implements Lwjgl3ApplicationBase {
 			windowHandle = GLFW.glfwCreateWindow(config.fullscreenMode.width, config.fullscreenMode.height, config.title,
 				config.fullscreenMode.getMonitor(), sharedContextWindow);
 		} else {
+			if (config.windowMaximized) {
+				Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+				config.windowWidth = screenSize.width;
+				config.windowHeight = screenSize.height;
+			}
 			GLFW.glfwWindowHint(GLFW.GLFW_DECORATED, config.windowDecorated ? GLFW.GLFW_TRUE : GLFW.GLFW_FALSE);
 			windowHandle = GLFW.glfwCreateWindow(config.windowWidth, config.windowHeight, config.title, 0, sharedContextWindow);
 		}
