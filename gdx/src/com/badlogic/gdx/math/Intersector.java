@@ -51,15 +51,12 @@ public final class Intersector {
 		v1.set(t2).sub(point);
 		v2.set(t3).sub(point);
 
-		float ab = v0.dot(v1);
-		float ac = v0.dot(v2);
-		float bc = v1.dot(v2);
-		float cc = v2.dot(v2);
+		v1.crs(v2);
+        v2.crs(v0);
 
-		if (bc * ac - cc * ab < 0) return false;
-		float bb = v1.dot(v1);
-		if (ab * bc - ac * bb < 0) return false;
-		return true;
+        if(v1.dot(v2) < 0f) return false;
+        v0.crs(v2.set(t2).sub(point));
+        return (v1.dot(v0) >= 0f);
 	}
 
 	/** Returns true if the given point is inside the triangle. */
