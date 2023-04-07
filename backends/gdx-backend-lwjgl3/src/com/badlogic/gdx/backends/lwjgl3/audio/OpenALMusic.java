@@ -16,20 +16,42 @@
 
 package com.badlogic.gdx.backends.lwjgl3.audio;
 
+import static org.lwjgl.openal.AL10.AL_BUFFERS_PROCESSED;
+import static org.lwjgl.openal.AL10.AL_BUFFERS_QUEUED;
+import static org.lwjgl.openal.AL10.AL_FALSE;
+import static org.lwjgl.openal.AL10.AL_FORMAT_MONO16;
+import static org.lwjgl.openal.AL10.AL_FORMAT_STEREO16;
+import static org.lwjgl.openal.AL10.AL_GAIN;
+import static org.lwjgl.openal.AL10.AL_INVALID_VALUE;
+import static org.lwjgl.openal.AL10.AL_LOOPING;
+import static org.lwjgl.openal.AL10.AL_NO_ERROR;
+import static org.lwjgl.openal.AL10.AL_PLAYING;
+import static org.lwjgl.openal.AL10.AL_POSITION;
+import static org.lwjgl.openal.AL10.AL_SOURCE_STATE;
+import static org.lwjgl.openal.AL10.alBufferData;
+import static org.lwjgl.openal.AL10.alDeleteBuffers;
+import static org.lwjgl.openal.AL10.alGenBuffers;
+import static org.lwjgl.openal.AL10.alGetError;
+import static org.lwjgl.openal.AL10.alGetSourcef;
+import static org.lwjgl.openal.AL10.alGetSourcei;
+import static org.lwjgl.openal.AL10.alSource3f;
+import static org.lwjgl.openal.AL10.alSourcePause;
+import static org.lwjgl.openal.AL10.alSourcePlay;
+import static org.lwjgl.openal.AL10.alSourceQueueBuffers;
+import static org.lwjgl.openal.AL10.alSourceStop;
+import static org.lwjgl.openal.AL10.alSourceUnqueueBuffers;
+import static org.lwjgl.openal.AL10.alSourcef;
+import static org.lwjgl.openal.AL10.alSourcei;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-
 import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.AL11;
-
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.GdxRuntimeException;
-
-import static org.lwjgl.openal.AL10.*;
 
 /** @author Nathan Sweet */
 public abstract class OpenALMusic implements Music {
@@ -162,9 +184,14 @@ public abstract class OpenALMusic implements Music {
 		alSourcef(sourceID, AL_GAIN, volume);
 	}
 
-	public void setPosition (float position) {
-		if (audio.noDevice) return;
-		if (sourceID == -1) return;
+	// TODO to fix, take a wrong offset over time.
+	// cf https://github.com/libgdx/libgdx/issues/6628
+	public void setPosition(float position) {
+		if (audio.noDevice)
+			return;
+		if (sourceID == -1)
+			return;
+		// stop playing & clean buffers
 		boolean wasPlaying = isPlaying;
 		isPlaying = false;
 		alSourceStop(sourceID);
@@ -172,13 +199,26 @@ public abstract class OpenALMusic implements Music {
 		while (renderedSecondsQueue.size > 0) {
 			renderedSeconds = renderedSecondsQueue.pop();
 		}
+		// reset if the current position is over the new position
 		if (position <= renderedSeconds) {
 			reset();
 			renderedSeconds = 0;
 		}
+		// read new bytes to reach the new position
 		while (renderedSeconds < (position - maxSecondsPerBuffer)) {
-			if (read(tempBytes) <= 0) break;
-			renderedSeconds += maxSecondsPerBuffer;
+			// read return the number of bytes readed.
+			// TODO Maybe we should use it to calculate time.
+			// a simple explanation of the problem can be :
+			// if the file is a mp3, the read method will read less than bufferSize bytes.
+			// so the time will be wrong & music will be late. (less bytes readed => less time skiped)
+			// if (read(tempBytes) <= 0) break;
+			// renderedSeconds += maxSecondsPerBuffer;
+
+			// new version
+			int length = read(tempBytes);
+			if (length <= 0) break;
+			float currentBufferSeconds = maxSecondsPerBuffer * (float) length / (float) bufferSize;
+			renderedSeconds += currentBufferSeconds;
 		}
 		renderedSecondsQueue.add(renderedSeconds);
 		boolean filled = false;
