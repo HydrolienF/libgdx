@@ -35,7 +35,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import com.badlogic.gdx.tests.*;
 import com.badlogic.gdx.tests.bench.TiledMapBench;
 import com.badlogic.gdx.tests.conformance.AudioSoundAndMusicIsolationTest;
@@ -49,10 +48,6 @@ import com.badlogic.gdx.tests.extensions.FreeTypeMetricsTest;
 import com.badlogic.gdx.tests.extensions.FreeTypePackTest;
 import com.badlogic.gdx.tests.extensions.FreeTypeTest;
 import com.badlogic.gdx.tests.extensions.InternationalFontsTest;
-import com.badlogic.gdx.tests.gles3.NonPowerOfTwoTest;
-import com.badlogic.gdx.tests.gles3.UniformBufferObjectsTest;
-import com.badlogic.gdx.tests.math.CollisionPlaygroundTest;
-import com.badlogic.gdx.tests.math.OctreeTest;
 import com.badlogic.gdx.tests.g3d.Animation3DTest;
 import com.badlogic.gdx.tests.g3d.AnisotropyTest;
 import com.badlogic.gdx.tests.g3d.Basic3DSceneTest;
@@ -85,7 +80,9 @@ import com.badlogic.gdx.tests.gles2.VertexArrayTest;
 import com.badlogic.gdx.tests.gles3.GL30Texture3DTest;
 import com.badlogic.gdx.tests.gles3.InstancedRenderingTest;
 import com.badlogic.gdx.tests.gles3.ModelInstancedRenderingTest;
+import com.badlogic.gdx.tests.gles3.NonPowerOfTwoTest;
 import com.badlogic.gdx.tests.gles3.PixelBufferObjectTest;
+import com.badlogic.gdx.tests.gles3.UniformBufferObjectsTest;
 import com.badlogic.gdx.tests.gles31.GL31FrameBufferMultisampleTest;
 import com.badlogic.gdx.tests.gles31.GL31IndirectDrawingIndexedTest;
 import com.badlogic.gdx.tests.gles31.GL31IndirectDrawingNonIndexedTest;
@@ -94,6 +91,8 @@ import com.badlogic.gdx.tests.gles32.GL32AdvancedBlendingTest;
 import com.badlogic.gdx.tests.gles32.GL32DebugControlTest;
 import com.badlogic.gdx.tests.gles32.GL32MultipleRenderTargetsBlendingTest;
 import com.badlogic.gdx.tests.gles32.GL32OffsetElementsTest;
+import com.badlogic.gdx.tests.math.CollisionPlaygroundTest;
+import com.badlogic.gdx.tests.math.OctreeTest;
 import com.badlogic.gdx.tests.math.collision.OrientedBoundingBoxTest;
 import com.badlogic.gdx.tests.net.NetAPITest;
 import com.badlogic.gdx.tests.superkoalio.SuperKoalio;
@@ -156,7 +155,7 @@ public class GdxTests {
 		DownloadTest.class,
 		DragAndDropTest.class,
 		ETC1Test.class,
-//		EarClippingTriangulatorTest.class,
+		// EarClippingTriangulatorTest.class,
 		EdgeDetectionTest.class,
 		ExitTest.class,
 		ExternalMusicTest.class,
@@ -168,6 +167,7 @@ public class GdxTests {
 		FrameBufferTest.class,
 		FramebufferToTextureTest.class,
 		FullscreenTest.class,
+		FullscreenTestWidthStage.class,
 		Gdx2DTest.class,
 		GestureDetectorTest.class,
 		GL30Texture3DTest.class,
@@ -286,7 +286,7 @@ public class GdxTests {
 		TableTest.class,
 		TangentialAccelerationTest.class,
 		TextAreaTest.class,
-		TextAreaTest2.class,		
+		TextAreaTest2.class,
 		TextAreaTest3.class,
 		TextButtonTest.class,
 		TextInputDialogTest.class,
@@ -337,7 +337,7 @@ public class GdxTests {
 		JsonTest.class,
 		QuadTreeFloatTest.class,
 		QuadTreeFloatNearestTest.class
-		// @on
+	// @on
 
 	// SoundTouchTest.class, Mpg123Test.class, WavTest.class, FreeTypeTest.class,
 	// VorbisTest.class
