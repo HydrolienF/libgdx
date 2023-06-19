@@ -746,6 +746,7 @@ public class Stage extends InputAdapter implements Disposable {
 	 * @param touchable If true, the hit detection will respect the {@link Actor#setTouchable(Touchable) touchability}.
 	 * @return May be null if no actor was hit. */
 	public @Null Actor hit (float stageX, float stageY, boolean touchable) {
+		// stageY--;
 		root.parentToLocalCoordinates(tempCoords.set(stageX, stageY));
 		return root.hit(tempCoords.x, tempCoords.y, touchable);
 	}
